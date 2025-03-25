@@ -45,7 +45,10 @@ public class E03AVLTree<T> {
     }
 
     public void delete(T value) {
-        root = delete(root, value);
+        if (search(value) != null) { // Verifica si el nodo existe antes de eliminar
+            root = delete(root, value);
+            size--; // Disminuir size solo si el nodo fue encontrado y eliminado
+        }
     }
 
     private AVLNode delete(AVLNode node, T value) {
@@ -57,9 +60,11 @@ public class E03AVLTree<T> {
         } else if (cmp > 0) {
             node.right = delete(node.right, value);
         } else {
-            size--;
+            // Nodo encontrado
             if (node.left == null) return node.right;
             if (node.right == null) return node.left;
+
+            // Buscar el mínimo del subárbol derecho
             AVLNode minLargerNode = getMin(node.right);
             node.value = minLargerNode.value;
             node.right = delete(node.right, minLargerNode.value);
@@ -67,6 +72,7 @@ public class E03AVLTree<T> {
 
         return balance(node);
     }
+
 
     public T search(T value) {
         AVLNode node = search(root, value);
